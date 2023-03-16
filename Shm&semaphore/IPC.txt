@@ -1,0 +1,47 @@
+Process synchronization using semaphores
+
+This program creates a semaphore using sem_open, which is used to synchronize the parent and child processes. 
+The parent process waits for the child process to signal that it has completed its task by using sem_wait, and the child process signals that it has completed its task by using sem_post.
+The semaphore is created with a name "asdfsd" using sem_open with O_CREAT flag, which creates a newsemaphore if it doesn't exist or opens an existing semaphore. 
+The initial value of the semaphore is set to 0, which means the parent process will wait until the child process signals.
+In the child function, it opens the semaphore again using sem_open with the same name as the parent process. After completing its task, it signals the semaphore using sem_post.
+In the parent function, it waits for the child process to signal the semaphore using sem_wait. Once the semaphore is signaled, it prints a message indicating that the child process has completed its task. 
+It then closes the semaphore using sem_close and unlinks the semaphore using sem_unlink.
+The main function forks a child process and calls the appropriate function based on whether the current process is the parent or child. After both processes complete their tasks, the program terminates.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Thread synchronization using semaphores
+
+The process initializes the semaphore variable s to ‘1’ using the sem_init() function. 
+The initial value is set to ‘1’ because binary semaphore is used here. 
+If you have multiple instances of the resource then counting semaphores can be used. 
+Next, the process creates two threads. thread1 acquires the semaphore variable by calling sem_wait(). 
+Next, it executes statements in its critical section part. We use sleep(1) function to preempt thread1 and start thread2. 
+This simulates a real-life scenario. Now, when thraed2 executes sem_wait() it will not be able to do so because thread1 is already in the critical section. 
+Finally, thread1 calls sem_post() function. Now thread2 will be able to acquire s using sem_wait(). 
+This ensures synchronization among threads. The final value of the variable shared will be 1. When any one of the threads executes the wait operation the value of “s” becomes zero. Hence the other thread is not able to successfully execute the wait operation on “s“.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Shared memory using samekey
+
+In this program, we first define a key (in this case, 1234) that will be used by all processes to access the same shared memory segment.
+We then create a shared memory segment using shmget() with the same key, and attach it to the current process's address space using shmat(). 
+We write some data to the shared memory using sprintf() and detach it from the current process's address space using shmdt().
+Next, we re-attach the shared memory segment to read the data using shmat(), and print it out using printf(). 
+Finally, we detach the shared memory segment again using shmdt() and remove it using shmctl() with the IPC_RMID flag.
+Note that this program only demonstrates the use of shared memory in a single process. 
+To share memory between multiple processes, you would need to use fork() or some other mechanism to create additional processes that can access the same shared memory segment using the same key.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Shared memory using differnt key
+
+In this program, we use the ftok() function to generate two unique keys for our two shared memory segments. 
+
+The first argument to ftok() is a pathname to a file or directory, which we set to "." to use the current directory. 
+The second argument is an arbitrary character that we choose to differentiate between the two keys.
+We then create two shared memory segments using shmget() with the IPC_CREAT and IPC_EXCL flags to create a new segment with the given key if it doesn't already exist. 
+We also set the permissions to 0666 so that all processes can read and write to the segments.
+We attach the shared memory segments to the current process's address space using shmat() and write some data to each segment using sprintf(). We then print out the data in the shared memory segments.

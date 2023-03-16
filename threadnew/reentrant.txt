@@ -1,0 +1,27 @@
+Program 1
+
+The reentrant() function is reentrant because it doesn't use any global variables or resources that can be modified by other threads. 
+Each time it is called, it creates its own stack frame and uses only local variables. 
+Therefore, it is safe to call this function from multiple threads simultaneously.
+In the thread_func() function, we call reentrant() function with a message argument. 
+We create two threads in the main() function and pass different messages to each thread. Finally, we wait for both threads to finish using pthread_join().
+When you run this program, you should see that the reentrant() function produces the expected output. 
+
+
+
+Program 2
+
+Not all thread safe code is reentrant.
+Thread safety refers to the ability of code to be accessed and modified safely by multiple threads of execution simultaneously. 
+Reentrancy, on the other hand, refers to the ability of code to be safely interrupted and resumed in the middle of its execution.
+While thread safety and reentrancy are related concepts, they are not the same thing. 
+Code can be thread safe but not reentrant, and code can be reentrant but not thread safe.
+Due to local var declaration OP does'nt vary.
+
+
+Program 3
+
+Re-entrance is something which is associated with a function whose first execution gets interrupted by second call to it 
+(from within the same thread) and this first execution resumes when the second execution completes. 
+This is not the case with threads which can keep on stepping onto another thread’s toes multiple times. So if a function is re-entrant then it does not guarantee that its thread safe.
+Due to global var declarartion OP varies everytime.
